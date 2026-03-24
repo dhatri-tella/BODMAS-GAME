@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Master - BODMAS Adventure</title>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="light-mode">
+    <div id="app" class="app-container">
+        <!-- Floating shapes background -->
+        <div class="bg-decoration">
+            <div class="shape shape-1">+</div>
+            <div class="shape shape-2">×</div>
+            <div class="shape shape-3">÷</div>
+            <div class="shape shape-4">-</div>
+            <div class="shape shape-5">( )</div>
+        </div>
+
+        <!-- Navigation / Header -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>MathMaster</span>
+            </div>
+            <div class="header-controls">
+                <button id="toggle-theme" title="Toggle Dark/Light Mode"><i class="fas fa-moon"></i></button>
+                <button id="toggle-sound" title="Toggle Sound"><i class="fas fa-volume-up"></i></button>
+                <div class="user-stats">
+                    <div class="stat-item" id="user-stars">
+                        <i class="fas fa-star text-gold"></i>
+                        <span>0</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="game-view">
+            <!-- Screens: Home, Level Select, Game, Leaderboard, etc. -->
+            
+            <!-- HOME SCREEN -->
+            <section id="screen-home" class="screen active">
+                <div class="hero-content">
+                    <h1 class="hero-title">Challenge Your Mind with <span>BODMAS</span></h1>
+                    <p class="hero-subtitle">Master the art of order-of-operations in this step-by-step puzzle adventure!</p>
+                    <div class="hero-actions">
+                        <div class="mode-selection">
+                            <button class="btn btn-primary mode-btn active" id="mode-learning" data-mode="learning">
+                                <i class="fas fa-book-open"></i>
+                                <span>Discovery</span>
+                                <small>Learning Mode</small>
+                            </button>
+                            <button class="btn btn-secondary mode-btn" id="mode-challenge" data-mode="challenge">
+                                <i class="fas fa-fire-alt"></i>
+                                <span>Elite</span>
+                                <small>Challenge Mode</small>
+                            </button>
+                        </div>
+                        <button class="btn btn-primary btn-lg" id="btn-play">
+                             <img src="assets/play.png" alt="" style="width: 30px; margin-right: 10px;"> Start Adventure
+                        </button>
+                        <button class="btn btn-secondary" id="btn-leaderboard">
+                            <i class="fas fa-trophy"></i> Leaderboard
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GAME SCREEN -->
+            <section id="screen-game" class="screen">
+                <div class="game-header">
+                    <div class="level-progress">
+                        <div class="progress-info">
+                            <span id="label-level">Level 1: Basic Math</span>
+                            <span id="label-progress">1/5</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="game-progress-bar" class="progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="game-score">
+                        <i class="fas fa-bolt text-bolt"></i>
+                        <span id="current-score">000</span>
+                    </div>
+                </div>
+
+                <div class="expression-area" id="expression-container">
+                    <!-- Dynamic Expression Tokens Go Here -->
+                </div>
+
+                <div class="interaction-hint" id="game-hint">
+                    Select which part of the equation to solve first!
+                </div>
+
+                <div class="solving-overlay" id="solve-modal">
+                    <div class="modal-content">
+                        <h3 id="solve-title">What is 5 + 3?</h3>
+                        <div class="solve-inputs">
+                            <input type="number" id="solve-input" placeholder="Result..." autofocus />
+                            <button id="solve-submit" class="btn btn-primary">Check</button>
+                        </div>
+                        <div id="solve-error" class="error-msg"></div>
+                    </div>
+                </div>
+
+                <div class="game-footer">
+                    <button class="btn btn-icon" id="btn-quit" title="Back to Home"><i class="fas fa-home"></i></button>
+                    <button class="btn btn-icon" id="btn-show-hint" title="Show Hint"><i class="fas fa-lightbulb"></i></button>
+                </div>
+            </section>
+
+            <!-- RESULT SCREEN -->
+            <section id="screen-result" class="screen">
+                <div class="result-card">
+                    <div class="result-badge">
+                        <img src="assets/badge.png" alt="Victory Badge" id="img-badge" style="width: 150px; margin-bottom: 20px;">
+                    </div>
+                    <h2>Adventure Complete!</h2>
+                    <p>You've mastered the order of operations.</p>
+                    <div class="result-stats">
+                        <div class="stat-box">
+                            <span class="stat-label">Points</span>
+                            <span class="stat-value" id="final-score">500</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Stars</span>
+                            <div class="star-rating" id="final-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-actions">
+                        <button class="btn btn-primary" id="btn-restart">Play Again</button>
+                        <button class="btn btn-secondary" id="btn-home-from-result">Home</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEADERBOARD SCREEN -->
+            <section id="screen-leaderboard" class="screen">
+                <div class="result-card">
+                    <h2><i class="fas fa-trophy text-gold"></i> Hall of Fame</h2>
+                    <div id="leaderboard-list" class="leaderboard-list">
+                        <!-- Dynamic list -->
+                        <div class="loading">Loading champions...</div>
+                    </div>
+                    <div class="result-actions">
+                        <button class="btn btn-secondary" id="btn-home-from-leaderboard">Back to Home</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>© 2026 MathMaster Educational Games Team</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/engine.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
