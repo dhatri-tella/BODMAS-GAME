@@ -19,15 +19,94 @@ const UI = (() => {
         solveInput: document.getElementById('solve-input'),
         solveSubmit: document.getElementById('solve-submit'),
         solveError: document.getElementById('solve-error'),
-        hintDisplay: document.getElementById('game-hint')
+        hintDisplay: document.getElementById('game-hint'),
+        
+        // Auth elements
+        authCard: document.querySelector('.auth-card'),
+        authTabs: document.querySelectorAll('.auth-tab'),
+        authForms: document.querySelectorAll('.auth-form'),
+        authError: document.getElementById('auth-error'),
+        loginSubmitBtn: document.getElementById('btn-login-submit'),
+        signupSubmitBtn: document.getElementById('btn-signup-submit'),
+        userProfileWidget: document.getElementById('user-profile-widget'),
+        displayUsername: document.getElementById('display-username'),
+        logoutBtn: document.getElementById('btn-logout')
     };
 
     let soundEnabled = true;
 
     // Initialize UI
-    function init() {
+    function init(onAuthAction) {
         elements.themeToggle.addEventListener('click', toggleTheme);
-        elements.soundToggle.addEventListener('click', toggleSound);
+        if (elements.soundToggle) elements.soundToggle.addEventListener('click', toggleSound);
+
+        // Auth Tabs logic
+        elements.authTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const target = e.target.dataset.tab;
+                
+                // Toggle tabs
+                elements.authTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Toggle forms
+                elements.authForms.forEach(form => {
+                    form.classList.remove('active');
+                    if (form.id === `auth-${target}-form`) form.classList.add('active');
+                });
+                
+                elements.authError.textContent = '';
+            });
+        });
+
+        // Pre-fill fields for demo purposes
+        document.getElementById('login-username').value = 'admin';
+        document.getElementById('login-password').value = '1234';
+
+        // Form Submissions
+        elements.loginSubmitBtn.addEventListener('click', () => {
+            const user = document.getElementById('login-username').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+            if (!user || !pass) {
+                showAuthError("Please fill in all fields.");
+                return;
+            }
+            onAuthAction('login', { user, pass });
+        });
+
+        elements.signupSubmitBtn.addEventListener('click', () => {
+            const user = document.getElementById('signup-username').value.trim();
+            const pass = document.getElementById('signup-password').value.trim();
+            if (!user || user.length < 3) {
+                showAuthError("Username must be at least 3 characters.");
+                return;
+            }
+            if (!pass || pass.length < 4) {
+                showAuthError("Password must be at least 4 characters.");
+                return;
+            }
+            onAuthAction('signup', { user, pass });
+        });
+
+        elements.logoutBtn.addEventListener('click', () => onAuthAction('logout'));
+    }
+
+    function showAuthError(msg) {
+        elements.authError.textContent = msg;
+        elements.authCard.classList.add('shake');
+        setTimeout(() => elements.authCard.classList.remove('shake'), 500);
+        playSound('error');
+    }
+
+    function updateUserInfo(userData) {
+        if (userData) {
+            elements.userProfileWidget.style.display = 'flex';
+            elements.displayUsername.textContent = userData.username;
+            elements.starsDisplay.textContent = userData.stats.stars || 0;
+            elements.userProfileWidget.classList.add('token-enter');
+        } else {
+            elements.userProfileWidget.style.display = 'none';
+        }
     }
 
     // Screen Management
@@ -190,6 +269,7 @@ const UI = (() => {
     
     return {
         init, showScreen, renderExpression, openSolveModal, closeSolveModal, showError, 
-        updateProgress, updateScore, showHint, highlightTokens, playSound, renderLeaderboard
+        updateProgress, updateScore, showHint, highlightTokens, playSound, renderLeaderboard,
+        updateUserInfo, showAuthError
     };
 })();

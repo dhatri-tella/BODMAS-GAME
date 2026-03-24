@@ -30,7 +30,13 @@
             </div>
             <div class="header-controls">
                 <button id="toggle-theme" title="Toggle Dark/Light Mode"><i class="fas fa-moon"></i></button>
-                <button id="toggle-sound" title="Toggle Sound"><i class="fas fa-volume-up"></i></button>
+                <div class="user-profile" id="user-profile-widget" style="display: none;">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <span id="display-username">Player</span>
+                    <button id="btn-logout" title="Logout" class="btn-sm-icon"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
                 <div class="user-stats">
                     <div class="stat-item" id="user-stars">
                         <i class="fas fa-star text-gold"></i>
@@ -42,10 +48,59 @@
 
         <!-- Main Content Area -->
         <main id="game-view">
-            <!-- Screens: Home, Level Select, Game, Leaderboard, etc. -->
-            
+            <!-- AUTH SCREEN -->
+            <section id="screen-auth" class="screen active">
+                <div class="auth-card">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="login">Login</button>
+                        <button class="auth-tab" data-tab="signup">Sign Up</button>
+                    </div>
+                    
+                    <div id="auth-login-form" class="auth-form active">
+                        <h2>Welcome Back!</h2>
+                        <p>Login to resume your mathematical journey.</p>
+                        <div class="form-group">
+                            <label for="login-username">Username</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="login-username" placeholder="Enter your username">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="login-password" placeholder="••••••••">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-full" id="btn-login-submit">Continue Adventure</button>
+                    </div>
+
+                    <div id="auth-signup-form" class="auth-form">
+                        <h2>Create Profile</h2>
+                        <p>Start your progress tracking today!</p>
+                        <div class="form-group">
+                            <label for="signup-username">Username</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="signup-username" placeholder="Pick a nickname">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="signup-password" placeholder="Create a password">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-full" id="btn-signup-submit">Start Journey</button>
+                    </div>
+                    <div id="auth-error" class="error-msg"></div>
+                </div>
+            </section>
+
             <!-- HOME SCREEN -->
-            <section id="screen-home" class="screen active">
+            <section id="screen-home" class="screen">
                 <div class="hero-content">
                     <h1 class="hero-title">Challenge Your Mind with <span>BODMAS</span></h1>
                     <p class="hero-subtitle">Master the art of order-of-operations in this step-by-step puzzle adventure!</p>
@@ -165,6 +220,7 @@
     </div>
 
     <!-- Scripts -->
+    <script src="js/auth.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/game.js"></script>

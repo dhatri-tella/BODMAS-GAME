@@ -18,9 +18,41 @@ const Game = (() => {
 
     // Initialize Game
     function init() {
-        UI.init();
+        Auth.init();
+        UI.init(handleAuthAction);
         setupEventListeners();
-        UI.showScreen('screen-home');
+
+        const user = Auth.getCurrentUser();
+        if (user) {
+            UI.updateUserInfo(user);
+            UI.showScreen('screen-home');
+        } else {
+            UI.showScreen('screen-auth');
+        }
+    }
+
+    function handleAuthAction(action, data) {
+        try {
+            let user;
+            if (action === 'login') {
+                user = Auth.login(data.user, data.pass);
+            } else if (action === 'signup') {
+                user = Auth.signup(data.user, data.pass);
+            } else if (action === 'logout') {
+                Auth.logout();
+                UI.updateUserInfo(null);
+                UI.showScreen('screen-auth');
+                return;
+            }
+
+            if (user) {
+                UI.updateUserInfo(user);
+                UI.showScreen('screen-home');
+                UI.playSound('success');
+            }
+        } catch (error) {
+            UI.showAuthError(error.message);
+        }
     }
 
     function setupEventListeners() {
@@ -61,7 +93,9 @@ const Game = (() => {
     }
 
     function submitScore(name, score) {
-        const payload = { name, score, date: new Date().toISOString() };
+        const user = Auth.getCurrentUser();
+        const finalName = user ? user.username : name;
+        const payload = { name: finalName, score, date: new Date().toISOString() };
         
         // Try PHP first
         fetch('api/leaderboard.php', {
@@ -216,10 +250,15 @@ const Game = (() => {
         
         UI.showScreen('screen-result');
 
-        // Optional name submission
+        // Update Auth stats
+        Auth.updateProgress(stars, state.score, state.levelIndex);
+        
+        // Update UI info
+        UI.updateUserInfo(Auth.getCurrentUser());
+
+        // Optional name submission to leaderboard
         setTimeout(() => {
-            const name = prompt("Adventure finished! Enter your name for the leaderboard:", "Player");
-            if (name) submitScore(name, state.score);
+            submitScore(null, state.score);
         }, 1000);
     }
 
